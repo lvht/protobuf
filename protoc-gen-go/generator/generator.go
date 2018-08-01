@@ -2716,13 +2716,10 @@ func (g *Generator) generateMessage(message *Descriptor) {
 
 func getStructTag(comment string) string {
 	parts := make([]string, 0)
-	re := regexp.MustCompile("^\\w.*:\"\\S+\"$")
+	re := regexp.MustCompile("\\w.*?:\"[^\"]+?\"")
 
-	for _, t := range strings.Fields(comment) {
+	for _, t := range re.FindAllString(comment, len(comment)) {
 		if strings.HasPrefix(t, "json:") || strings.HasPrefix(t, "protobuf:") {
-			continue
-		}
-		if !re.MatchString(t) {
 			continue
 		}
 		parts = append(parts, t)
